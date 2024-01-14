@@ -14,7 +14,6 @@ namespace Assets.Scripts.Enemies
         private List<Tile> path;
 
         private List<Tile> _tiles;
-        [SerializeField] private Tile currentTile;
         private Vector3 pos;
         private Vector3 playerPos;
 
@@ -26,30 +25,7 @@ namespace Assets.Scripts.Enemies
             pos = transform.position;
         }
 
-        private void Update()
-        {
-            if (playerPos != player.transform.position)
-            {
-                isPlayerMoved = true;
-                playerPos = player.transform.position;
-            }
-
-            if (isPlayerMoved)
-            {
-                //DoNextAction();
-                isPlayerMoved = false;
-                StartSearch(player.GetComponent<MoveHandler>().currentTile);
-                Debug.Log("Path to player " + path.Count);
-            }
-
-            pos = transform.position;
-            currentTile = _tiles
-                .FirstOrDefault(lTile => lTile.x == pos.x && lTile.z == pos.z);
-
-            //path = FindPath(currentTile, player.GetComponent<MoveHandler>().currentTile);
-        }
-
-        public override Actions CalculateNextAction()
+        public override EnemyAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         { 
             //foreach (Vector3 point in path)
             //{
@@ -65,33 +41,33 @@ namespace Assets.Scripts.Enemies
 
             if (true)
             {
-                return Actions.MoveFront;
+                return EnemyAction.MoveFront;
             }
 
         }
 
-        public override void DoNextAction()
+        public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            if (CalculateNextAction() == Actions.MoveFront)
-            {
-                transform.position += new Vector3(0, 0, 2);
-            }
-            if (CalculateNextAction() == Actions.MoveBack)
-            {
-                transform.position += new Vector3(0, 0, -2);
-            }
-            if (CalculateNextAction() == Actions.MoveLeft)
-            {
-                transform.position += new Vector3(-2, 0, 0);
-            }
-            if (CalculateNextAction() == Actions.MoveRight)
-            {
-                transform.position += new Vector3(2, 0, 0);
-            }
-            if (CalculateNextAction() == Actions.Stand)
-            {
-                transform.position += Vector3.zero;
-            }
+            // if (CalculateNextAction() == EnemyAction.MoveFront)
+            // {
+            //     transform.position += new Vector3(0, 0, 2);
+            // }
+            // if (CalculateNextAction() == EnemyAction.MoveBack)
+            // {
+            //     transform.position += new Vector3(0, 0, -2);
+            // }
+            // if (CalculateNextAction() == EnemyAction.MoveLeft)
+            // {
+            //     transform.position += new Vector3(-2, 0, 0);
+            // }
+            // if (CalculateNextAction() == EnemyAction.MoveRight)
+            // {
+            //     transform.position += new Vector3(2, 0, 0);
+            // }
+            // if (CalculateNextAction() == EnemyAction.Stand)
+            // {
+            //     transform.position += Vector3.zero;
+            // }
         }
 
         public void StartSearch(Tile endTile)

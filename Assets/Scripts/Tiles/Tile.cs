@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Component;
 using Unity.VisualScripting;
 using UnityEngine.Serialization;
 
@@ -40,6 +42,34 @@ namespace Tiles
         public bool IsPassable()
         {
             return true;
+        }
+        
+        public List<Tile> FindTileNeighbors()
+        {
+            List<Tile> tiles = new List<Tile>{front, back, left, right};
+            tiles.RemoveAll(item => item == null);
+            return tiles;
+        }
+
+        public Direction TileNeighborDirection(Tile tileForCheck)
+        {
+            if (tileForCheck == front)
+            {
+                return Direction.Front;
+            }
+            if (tileForCheck == back)
+            {
+                return Direction.Back;
+            }
+            if (tileForCheck == left)
+            {
+                return Direction.Left;
+            }
+            if (tileForCheck == right)
+            {
+                return Direction.Right;
+            }
+            return Direction.Undefined;
         }
     }
 }

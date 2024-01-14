@@ -13,7 +13,6 @@ namespace Assets.Scripts.Enemies
         [SerializeField] private GameController gameController;
 
         private List<Tile> _tiles;
-        [SerializeField] private Tile currentTile;
 
         [SerializeField] private Tile leftTile;
         [SerializeField] private Tile rightTile;
@@ -28,107 +27,85 @@ namespace Assets.Scripts.Enemies
         private void Start()
         {
             _tiles = gameController.tiles;
-            playerPos = player.transform.position;
+            //playerPos = player.transform.position;
         }
 
-        private void Update()
+        public override EnemyAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            if (playerPos != player.transform.position)
-            {
-                isPlayerMoved = true;
-                playerPos = player.transform.position;
-            }
-            if (isPlayerMoved)
-            {
-                DoNextAction();
-                isPlayerMoved = false;
-            }
-
-            pos = transform.position;
-            currentTile = _tiles
-                .FirstOrDefault(lTile => lTile.x == pos.x && lTile.z == pos.z);
-
-            rightTile = currentTile.right;
-            leftTile = currentTile.left;
-            frontTile = currentTile.front;
-            backTile = currentTile.back;
-        }
-
-        public override Actions CalculateNextAction()
-        {
-            if (leftTile != null
-                || rightTile != null
-                || frontTile != null
-                || backTile != null)
-            {
-                if (leftTile == player.GetComponent<MoveHandler>().currentTile)
-                {
-                    return Actions.MoveRight;
-                }
-                if (rightTile == player.GetComponent<MoveHandler>().currentTile)
-                {
-                    return Actions.MoveLeft;
-                }
-                if (frontTile == player.GetComponent<MoveHandler>().currentTile)
-                {
-                    return Actions.MoveBack;
-                }
-                if (backTile == player.GetComponent<MoveHandler>().currentTile)
-                {
-                    return Actions.MoveFront;
-                }
-            }
-            //else
-            //{
-            //    if (currentTile.x == 20 || currentTile.x == 0)
-            //    {
-            //        if (leftTile == player.GetComponent<MoveHandler>().currentTile || rightTile == player.GetComponent<MoveHandler>().currentTile)
-            //        {
-            //            switch (RandomFrontBack())
-            //            {
-            //                case 0: return Actions.MoveFront;
-            //                case 1: return Actions.MoveBack;
-            //            }
-            //        }
-            //    }
-            //    if (frontTile.front == null || backTile.back == null)
-            //    {
-            //        if (frontTile == player.GetComponent<MoveHandler>().currentTile || backTile == player.GetComponent<MoveHandler>().currentTile)
-            //        {
-            //            switch (RandomRightLeft())
-            //            {
-            //                case 0: return Actions.MoveLeft;
-            //                case 1: return Actions.MoveRight;
-            //            }
-            //        }
-            //    }
-            //}
-            return Actions.Stand;
+            // if (leftTile != null
+            //     || rightTile != null
+            //     || frontTile != null
+            //     || backTile != null)
+            // {
+            //     if (leftTile == player.GetComponent<MoveHandler>().currentTile)
+            //     {
+            //         return EnemyAction.MoveRight;
+            //     }
+            //     if (rightTile == player.GetComponent<MoveHandler>().currentTile)
+            //     {
+            //         return EnemyAction.MoveLeft;
+            //     }
+            //     if (frontTile == player.GetComponent<MoveHandler>().currentTile)
+            //     {
+            //         return EnemyAction.MoveBack;
+            //     }
+            //     if (backTile == player.GetComponent<MoveHandler>().currentTile)
+            //     {
+            //         return EnemyAction.MoveFront;
+            //     }
+            // }
+            // //else
+            // //{
+            // //    if (currentTile.x == 20 || currentTile.x == 0)
+            // //    {
+            // //        if (leftTile == player.GetComponent<MoveHandler>().currentTile || rightTile == player.GetComponent<MoveHandler>().currentTile)
+            // //        {
+            // //            switch (RandomFrontBack())
+            // //            {
+            // //                case 0: return Actions.MoveFront;
+            // //                case 1: return Actions.MoveBack;
+            // //            }
+            // //        }
+            // //    }
+            // //    if (frontTile.front == null || backTile.back == null)
+            // //    {
+            // //        if (frontTile == player.GetComponent<MoveHandler>().currentTile || backTile == player.GetComponent<MoveHandler>().currentTile)
+            // //        {
+            // //            switch (RandomRightLeft())
+            // //            {
+            // //                case 0: return Actions.MoveLeft;
+            // //                case 1: return Actions.MoveRight;
+            // //            }
+            // //        }
+            // //    }
+            // //}
+            // return EnemyAction.Stand;
+            return 0;
         }
 
 
-    public override void DoNextAction()
+    public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
     {
-        if (CalculateNextAction() == Actions.MoveFront)
-        {
-            transform.position += new Vector3(0, 0, 2);
-        }
-        if (CalculateNextAction() == Actions.MoveBack)
-        {
-            transform.position += new Vector3(0, 0, -2);
-        }
-        if (CalculateNextAction() == Actions.MoveRight)
-        {
-            transform.position += new Vector3(2, 0, 0);
-        }
-        if (CalculateNextAction() == Actions.MoveLeft)
-        {
-            transform.position += new Vector3(-2, 0, 0);
-        }
-        if (CalculateNextAction() == Actions.Stand)
-        {
-            transform.position += Vector3.zero;
-        }
+        // if (CalculateNextAction() == EnemyAction.MoveFront)
+        // {
+        //     transform.position += new Vector3(0, 0, 2);
+        // }
+        // if (CalculateNextAction() == EnemyAction.MoveBack)
+        // {
+        //     transform.position += new Vector3(0, 0, -2);
+        // }
+        // if (CalculateNextAction() == EnemyAction.MoveRight)
+        // {
+        //     transform.position += new Vector3(2, 0, 0);
+        // }
+        // if (CalculateNextAction() == EnemyAction.MoveLeft)
+        // {
+        //     transform.position += new Vector3(-2, 0, 0);
+        // }
+        // if (CalculateNextAction() == EnemyAction.Stand)
+        // {
+        //     transform.position += Vector3.zero;
+        // }
     }
 
     public int RandomRightLeft()

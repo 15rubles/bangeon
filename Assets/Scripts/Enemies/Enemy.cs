@@ -1,12 +1,15 @@
 ﻿using Component;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Tiles;
 using UnityEngine;
 
 namespace Assets.Scripts.Enemies
 {
-    public enum Actions
+    public enum EnemyAction
     {
+        Undefined,
         Attack,
         Stand,
         MoveFront,
@@ -18,11 +21,16 @@ namespace Assets.Scripts.Enemies
 
     public abstract class Enemy : MonoBehaviour
     {
-        public string enemyName;
-        public float health;
-        public GameObject prefab;
-        public GameObject player;
-        public abstract Actions CalculateNextAction();
-        public abstract void DoNextAction();
+        protected string enemyName;
+        protected float health;
+        protected EnemyAction _nextAction;
+        [SerializeField] protected Tile currentTile;
+        public abstract EnemyAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile);
+        public abstract void DoNextAction(List<Tile> tiles, Tile currentPlayerTile);
+
+        public virtual void InitCurrentTile(List<Tile> tiles)
+        {
+            //TODO init currentTile пока что хардкод
+        }
     }
 }

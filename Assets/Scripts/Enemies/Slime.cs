@@ -1,112 +1,102 @@
-﻿using Component;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Enemies;
+using Component;
 using Tiles;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-namespace Assets.Scripts.Enemies
+namespace Enemies
 {
     public class Slime : Enemy
     {
-        [SerializeField] private GameController gameController;
+        private const double TOLERANCE = 0.1f;
 
-        private List<Tile> _tiles;
-        [SerializeField] private Tile currentTile;
-        private Vector3 pos;
-        private Vector3 playerPos;
-
-        private bool isPlayerMoved = false;//костыль
-
-        private void Start()
+        public override void InitCurrentTile(List<Tile> tiles)
         {
-            _tiles = gameController.tiles;
-            playerPos = player.transform.position;
+            //TODO init currentTile пока что хардкод
+            currentTile = tiles
+                .FirstOrDefault(lTile => Math.Abs(lTile.x - gameObject.transform.position.x) < TOLERANCE
+                                         && Math.Abs(lTile.z - gameObject.transform.position.z) < TOLERANCE);
         }
 
-        private void Update()
+        public override EnemyAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            if (playerPos != player.transform.position)
+            if (currentPlayerTile == currentTile)
             {
-                isPlayerMoved = true;
-                playerPos = player.transform.position;
-            }
-            if (isPlayerMoved)
-            {
-                DoNextAction();
-                isPlayerMoved = false;
-            }
-            
-            pos = transform.position;
-            currentTile = _tiles
-                .FirstOrDefault(lTile => lTile.x == pos.x && lTile.z == pos.z);
-        }
-
-        public override Actions CalculateNextAction()
-        {
-            if (player.GetComponent<MoveHandler>().currentTile == currentTile)
-            {
-                return Actions.Attack;
+                _nextAction = EnemyAction.Attack;
             }
             else
             {
-                int actionMove = Random.Range(0, 5);
-                switch (actionMove)
+                List<Tile> neighborsTiles = currentTile.FindTileNeighbors();
+
+                if (neighborsTiles.Count == 0)
                 {
-                    case 0:
-                        if (pos.z + 2 <= 20)
-                        {
-                            return Actions.MoveFront;
-                        }
-                        break;
-                    case 1:
-                        if (pos.z - 2 > 0)
-                        {
-                            return Actions.MoveBack;
-                        }
-                        break;
-                    case 2:
-                        if (pos.x + 2 <= 20)
-                        {
-                            return Actions.MoveRight;
-                        }
-                        break;
-                    case 3:
-                        if (pos.x - 2 > 0)
-                        {
-                            return Actions.MoveLeft;
-                        }
-                        break;
+                    _nextAction = EnemyAction.Stand;
+                }
+                else
+                {
+                    Tile nextTile = neighborsTiles[Random.Range(0, neighborsTiles.Count)];
+                    Direction nextTileDirection = currentTile.TileNeighborDirection(nextTile);
+                    switch (nextTileDirection)
+                    {
+                        case Direction.Front:
+                            _nextAction = EnemyAction.MoveFront;
+                            break;
+                        case Direction.Back:
+                            _nextAction = EnemyAction.MoveBack;
+                            break;
+                        case Direction.Left:
+                            _nextAction = EnemyAction.MoveLeft;
+                            break;
+                        case Direction.Right:
+                            _nextAction = EnemyAction.MoveRight;
+                            break;
+                        default:
+                            _nextAction = EnemyAction.Stand;
+                            break;
+                    }
                 }
             }
-            return Actions.Stand;
+
+            return _nextAction;
         }
 
-        public override void DoNextAction()
-        { 
-            if (CalculateNextAction() == Actions.MoveFront)
+        public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
+        {
+            if (_nextAction == EnemyAction.Undefined)
             {
-                transform.position += new Vector3(0, 0, 2);
+                _nextAction = CalculateNextAction(tiles, currentPlayerTile);
             }
-            if (CalculateNextAction() == Actions.MoveBack)
+
+            Vector3 move = Vector3.zero;
+            switch (_nextAction)
             {
-                transform.position += new Vector3(0, 0, -2);
+                case EnemyAction.Stand:
+                    break;
+                case EnemyAction.MoveFront:
+                    currentTile = currentTile.front;
+                    move += new Vector3(0, 0, 2);
+                    break;
+                case EnemyAction.MoveBack:
+                    currentTile = currentTile.back;
+                    move += new Vector3(0, 0, -2);
+                    break;
+                case EnemyAction.MoveLeft:
+                    currentTile = currentTile.left;
+                    move += new Vector3(-2, 0, 0);
+                    break;
+                case EnemyAction.MoveRight:
+                    currentTile = currentTile.right;
+                    move += new Vector3(2, 0, 0);
+                    break;
+                case EnemyAction.Attack:
+                    Debug.Log("Slime Attacked");
+                    break;
             }
-            if (CalculateNextAction() == Actions.MoveLeft)
-            {
-                transform.position += new Vector3(-2, 0, 0);
-            }
-            if (CalculateNextAction() == Actions.MoveRight)
-            {
-                transform.position += new Vector3(2, 0, 0);
-            }
-            if (CalculateNextAction() == Actions.Stand)
-            {
-                transform.position += Vector3.zero;
-            }
-            if(CalculateNextAction() == Actions.Attack)
-            {
-                Debug.Log("Slime Attacked");
-            }
+
+            transform.position += move; //TODO добавить анимации + и т д 
         }
     }
 }
