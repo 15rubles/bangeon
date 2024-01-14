@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Component;
-using Unity.VisualScripting;
-using UnityEngine.Serialization;
 
 namespace Tiles
 {

@@ -59,7 +59,7 @@ namespace Enemies
                     }
                 }
             }
-
+            //TODO vizualization of next actions
             return _nextAction;
         }
 

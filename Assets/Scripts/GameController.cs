@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Enemies;
-using Component;
 using Tiles;
+using TMPro;
 using UnityEngine;
 
 
@@ -11,9 +11,10 @@ public class GameController : MonoBehaviour
 {
     private const double TOLERANCE = 0.1f;
 
-    private int turnCounter = 0;
+    private int turnCounter = 1;
 
     [SerializeField] private List<Enemy> _enemies;
+    [SerializeField] private TMP_Text turnText;
     
     public List<Tile> tiles = new List<Tile>();
     [SerializeField] private int _xBound = 20, _zBound = 20;
@@ -91,6 +92,8 @@ public class GameController : MonoBehaviour
 
     public void EndTurn(Tile currentPlayerTile)
     {
+        turnCounter++;
+        turnText.text = turnCounter.ToString();
         foreach (Enemy enemy in _enemies)
         {
             enemy.DoNextAction(tiles, currentPlayerTile);
@@ -98,7 +101,6 @@ public class GameController : MonoBehaviour
         foreach (Enemy enemy in _enemies)
         {
             enemy.CalculateNextAction(tiles, currentPlayerTile);
-            //TODO vizualization of next actions
         }
     }
     
