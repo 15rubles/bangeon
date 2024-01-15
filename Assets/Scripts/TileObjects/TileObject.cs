@@ -1,13 +1,10 @@
-﻿using Component;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
 using Tiles;
 using UnityEngine;
 
-namespace Assets.Scripts.Enemies
+namespace Assets.Scripts
 {
-    public enum EnemyAction
+    public enum TileObjectAction
     {
         Undefined,
         Attack,
@@ -19,13 +16,12 @@ namespace Assets.Scripts.Enemies
         Die
     }
 
-    public abstract class Enemy : MonoBehaviour
+    public abstract class TileObject : MonoBehaviour
     {
-        protected string enemyName;
-        protected float health;
-        protected EnemyAction _nextAction;
+        protected string objectName;
+        protected TileObjectAction _nextAction;
         [SerializeField] protected Tile currentTile;
-        public abstract EnemyAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile);
+        public abstract TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile);
         public abstract void DoNextAction(List<Tile> tiles, Tile currentPlayerTile);
 
         public virtual void InitCurrentTile(List<Tile> tiles)

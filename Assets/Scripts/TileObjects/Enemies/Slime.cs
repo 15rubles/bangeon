@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Assets.Scripts.Enemies;
 using Component;
 using Tiles;
@@ -21,11 +22,11 @@ namespace Enemies
                                          && Math.Abs(lTile.z - gameObject.transform.position.z) < TOLERANCE);
         }
 
-        public override EnemyAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
+        public override TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
             if (currentPlayerTile == currentTile)
             {
-                _nextAction = EnemyAction.Attack;
+                _nextAction = TileObjectAction.Attack;
             }
             else
             {
@@ -33,7 +34,7 @@ namespace Enemies
 
                 if (neighborsTiles.Count == 0)
                 {
-                    _nextAction = EnemyAction.Stand;
+                    _nextAction = TileObjectAction.Stand;
                 }
                 else
                 {
@@ -42,19 +43,19 @@ namespace Enemies
                     switch (nextTileDirection)
                     {
                         case Direction.Front:
-                            _nextAction = EnemyAction.MoveFront;
+                            _nextAction = TileObjectAction.MoveFront;
                             break;
                         case Direction.Back:
-                            _nextAction = EnemyAction.MoveBack;
+                            _nextAction = TileObjectAction.MoveBack;
                             break;
                         case Direction.Left:
-                            _nextAction = EnemyAction.MoveLeft;
+                            _nextAction = TileObjectAction.MoveLeft;
                             break;
                         case Direction.Right:
-                            _nextAction = EnemyAction.MoveRight;
+                            _nextAction = TileObjectAction.MoveRight;
                             break;
                         default:
-                            _nextAction = EnemyAction.Stand;
+                            _nextAction = TileObjectAction.Stand;
                             break;
                     }
                 }
@@ -65,7 +66,7 @@ namespace Enemies
 
         public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            if (_nextAction == EnemyAction.Undefined)
+            if (_nextAction == TileObjectAction.Undefined)
             {
                 _nextAction = CalculateNextAction(tiles, currentPlayerTile);
             }
@@ -73,25 +74,25 @@ namespace Enemies
             Vector3 move = Vector3.zero;
             switch (_nextAction)
             {
-                case EnemyAction.Stand:
+                case TileObjectAction.Stand:
                     break;
-                case EnemyAction.MoveFront:
+                case TileObjectAction.MoveFront:
                     currentTile = currentTile.front;
                     move += new Vector3(0, 0, 2);
                     break;
-                case EnemyAction.MoveBack:
+                case TileObjectAction.MoveBack:
                     currentTile = currentTile.back;
                     move += new Vector3(0, 0, -2);
                     break;
-                case EnemyAction.MoveLeft:
+                case TileObjectAction.MoveLeft:
                     currentTile = currentTile.left;
                     move += new Vector3(-2, 0, 0);
                     break;
-                case EnemyAction.MoveRight:
+                case TileObjectAction.MoveRight:
                     currentTile = currentTile.right;
                     move += new Vector3(2, 0, 0);
                     break;
-                case EnemyAction.Attack:
+                case TileObjectAction.Attack:
                     Debug.Log("Slime Attacked");
                     break;
             }
