@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using Assets.Scripts;
+using Assets.Scripts.TileObjects.Traps;
 using Tiles;
+using UnityEngine;
 
-namespace Assets.Scripts.TileObjects.Traps
+namespace TileObjects.Traps
 {
     public class SpikesStatic : Trap
     {
@@ -18,15 +20,7 @@ namespace Assets.Scripts.TileObjects.Traps
         }
         public override TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            if (currentPlayerTile == currentTile)
-            {
-                _nextAction = TileObjectAction.Attack;
-            }
-            else
-            {
-                _nextAction = TileObjectAction.Stand;
-            }
-
+            _nextAction = currentPlayerTile == currentTile ? TileObjectAction.Attack : TileObjectAction.Stand;
             return _nextAction;
         }
 
@@ -40,7 +34,7 @@ namespace Assets.Scripts.TileObjects.Traps
             {
                 switch(_nextAction)
                 {
-                    case TileObjectAction.Attack: Debug.Log("SpikesStatic Attacked"); break;
+                    case TileObjectAction.Attack: Debug.Log("SpikesStatic Attacked"); break; //TODO добавить нанесение урона
                     case TileObjectAction.Stand: break;
                 }
             }
