@@ -5,21 +5,25 @@ namespace Tiles
     public class WeightedTile
     {
         public Tile tile;
-        public int F;
-        public int G;
-        public int H;
-        public Tile position;
-        public Tile targetPosition;
-        public Tile previousTile;//для поиска пути, мб куда-то перенести пока хз
-        
-        
-        public WeightedTile(Tile start, Tile target, Tile previousTile, int g)
+        public int gCost;
+        public int hCost;
+        public int fCost;
+        public WeightedTile cameFrom;
+
+        public WeightedTile(Tile tile, int g, int f, int h)
         {
-            position = start;
-            targetPosition = target;
-            G = g;
-            H = Mathf.Abs(start.x - target.x) + Mathf.Abs(start.z - target.z);
-            F = G + H;
+            this.hCost = h;
+            this.gCost = g;
+            this.fCost = f;
+            this.tile = tile;
         }
+
+        public WeightedTile(Tile tile) { this.tile = tile; }
+
+        public void CalculateFCost()
+        {
+            fCost = gCost + hCost;
+        }
+
     }
 }

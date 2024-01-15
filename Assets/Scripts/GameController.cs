@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
 using Assets.Scripts.Enemies;
+using Assets.Scripts.TileObjects.Traps;
 using Tiles;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEngine.EventSystems.EventTrigger;
 
 
 public class GameController : MonoBehaviour
@@ -14,16 +18,21 @@ public class GameController : MonoBehaviour
     private int turnCounter = 1;
 
     [SerializeField] private List<Enemy> _enemies;
+    [SerializeField] private List<Trap> _traps;
+    //[SerializeField] private List<InteractiveObject> _interactiveObjects;
     [SerializeField] private TMP_Text turnText;
     
     public List<Tile> tiles = new List<Tile>();
     [SerializeField] private int _xBound = 20, _zBound = 20;
+
+    private List<TileObject> _tileObjects;
     
     private void Awake()
     {
         Tile firstTile = new Tile(0, 0);
         tiles.Add(firstTile);
         AddParrentTile(firstTile);
+        //_tileObjects.Union(_enemies).Union(_traps);
     }
 
     public void InitFirstEnemyAction(Tile currentPlayerTile)
@@ -33,7 +42,20 @@ public class GameController : MonoBehaviour
             enemy.InitCurrentTile(tiles); //TODO init currentTile пока что хардкод
             enemy.CalculateNextAction(tiles, currentPlayerTile);
             //TODO vizualization of next actions
+        }        
+        foreach (Trap trap in _traps)
+        {
+            trap.InitCurrentTile(tiles); //TODO init currentTile пока что хардкод
+            trap.CalculateNextAction(tiles, currentPlayerTile);
+            //TODO vizualization of next actions
         }
+
+        //foreach(TileObject tileObject in _tileObjects)
+        //{
+        //    tileObject.InitCurrentTile(tiles);//TODO init currentTile пока что хардкод
+        //    tileObject.CalculateNextAction(tiles, currentPlayerTile);
+        //    //TODO vizualization of next actions
+        //}
     }
 
     private void AddParrentTile(Tile tile)
@@ -102,6 +124,24 @@ public class GameController : MonoBehaviour
         {
             enemy.CalculateNextAction(tiles, currentPlayerTile);
         }
+        
+        foreach (Trap trap in _traps)
+        {
+            trap.CalculateNextAction(tiles, currentPlayerTile);
+        }
+        foreach (Trap trap in _traps)
+        {
+            trap.DoNextAction(tiles, currentPlayerTile);
+        }
+
+        //foreach(TileObject tileObject in _tileObjects)
+        //{
+        //    tileObject.DoNextAction(tiles, currentPlayerTile);
+        //}
+        //foreach (TileObject tileObject in _tileObjects)
+        //{
+        //    tileObject.CalculateNextAction(tiles, currentPlayerTile);
+        //}
     }
     
     

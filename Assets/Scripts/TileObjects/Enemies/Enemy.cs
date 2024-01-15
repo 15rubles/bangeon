@@ -4,6 +4,5 @@
     { 
         protected float health;
         protected float damage;
-
     }
 }

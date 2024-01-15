@@ -15,13 +15,6 @@ namespace Tiles
         public Tile back;
         public Tile front;
 
-        public int F;
-        public int G;
-        public int H;
-        public Tile position;
-        public Tile targetPosition;
-        public Tile previousTile;//для поиска пути, мб куда-то перенести пока хз
-        
         public Tile(int x, int z, Tile left, Tile right, Tile back, Tile front)
         {
             this.x = x;
@@ -42,15 +35,6 @@ namespace Tiles
         { 
             x = 0;
             z = 0;
-        }
-
-        public Tile(Tile start, Tile target, Tile previousTile, int g)
-        {
-            position = start;
-            targetPosition = target;
-            G = g;
-            H = (int) Mathf.Abs(start.x - target.x) + (int)Mathf.Abs(start.z - target.z);
-            F = G + H;
         }
 
         public bool IsPassable()

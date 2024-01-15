@@ -1,21 +1,13 @@
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace TileObjects
+namespace Assets.Scripts.TileObjects.Traps
 {
-    public class Trap
+    public abstract class Trap : TileObject
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        protected int damage;
     }
 }

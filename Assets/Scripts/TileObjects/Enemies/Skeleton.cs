@@ -7,7 +7,7 @@ namespace Assets.Scripts.Enemies
 {
     public class Skeleton : Enemy
     {
-        [SerializeField] private PathFinder pathFinder;
+        //[SerializeField] private PathFinder pathFinder;
 
         private const double TOLERANCE = 0.1f;
 
@@ -21,9 +21,9 @@ namespace Assets.Scripts.Enemies
 
         public override TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            List<Tile> path = pathFinder.FindPath(currentTile, currentPlayerTile);
+            //List<Tile> path = pathFinder.FindPath(currentTile, currentPlayerTile);
 
-            Debug.Log(path.Count);
+            //Debug.Log(path.Count);
 
             if (true)
             {
