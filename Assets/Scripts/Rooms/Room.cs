@@ -1,14 +1,14 @@
-﻿using Assets.Scripts.Enemies;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Assets.Scripts.Enemies;
 using UnityEngine;
 
-namespace Assets.Scripts.Rooms
+namespace Rooms
 {
+    [CreateAssetMenu(fileName = "Room", menuName = "Data/Room", order = 1)]
     public class Room : ScriptableObject
     {
-        [SerializeField] private GameObject roomPrefab;
-        [SerializeField] private int level;
-        [SerializeField] private List<Enemy> enemies;
+        public GameObject roomPrefab;
+        public int level;
+        public List<Enemy> enemies;
     }
 }
