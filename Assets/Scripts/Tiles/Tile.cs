@@ -42,7 +42,7 @@ namespace Tiles
             return true;
         }
         
-        public List<Tile> FindTileNeighbors()
+        public List<Tile> GetTileNeighbors()
         {
             List<Tile> tiles = new List<Tile>{front, back, left, right};
             tiles.RemoveAll(item => item == null);

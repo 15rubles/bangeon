@@ -3,13 +3,13 @@ using System.Linq;
 using Tiles;
 using UnityEngine;
 using System;
-using Component;
 
 namespace Assets.Scripts.Enemies
 {
     public class Shy : Enemy
     {
         private const double TOLERANCE = 0.1f;
+        [SerializeField] private List<WeightedTile> _pathTiles;
 
         public override void InitCurrentTile(List<Tile> tiles)
         {
@@ -21,7 +21,9 @@ namespace Assets.Scripts.Enemies
 
         public override TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            List<Tile> neighborTiles = currentTile.FindTileNeighbors();
+            _pathTiles = PathFinder.FindPath(currentTile, currentPlayerTile);
+            
+            List<Tile> neighborTiles = currentTile.GetTileNeighbors();
 
             if (neighborTiles.Count == 0)
             {

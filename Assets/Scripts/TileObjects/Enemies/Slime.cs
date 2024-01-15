@@ -30,7 +30,7 @@ namespace Enemies
             }
             else
             {
-                List<Tile> neighborsTiles = currentTile.FindTileNeighbors();
+                List<Tile> neighborsTiles = currentTile.GetTileNeighbors();
 
                 if (neighborsTiles.Count == 0)
                 {

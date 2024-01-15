@@ -1,28 +1,35 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Tiles
 {
+    [Serializable]
     public class WeightedTile
     {
-        public Tile tile;
-        public int gCost;
-        public int hCost;
-        public int fCost;
-        public WeightedTile cameFrom;
+        public Tile Tile;
+        public int G;
+        public int H;
+        public int F;
+        public WeightedTile CameFrom;
 
-        public WeightedTile(Tile tile, int g, int f, int h)
+        public WeightedTile(Tile tile, int g, int h, WeightedTile cameFrom)
         {
-            this.hCost = h;
-            this.gCost = g;
-            this.fCost = f;
-            this.tile = tile;
+            Tile = tile;
+            G = g;
+            H = h;
+            F = g + h;
+            CameFrom = cameFrom;
         }
 
-        public WeightedTile(Tile tile) { this.tile = tile; }
+        public WeightedTile(Tile tile)
+        {
+            Tile = tile;
+        }
 
         public void CalculateFCost()
         {
-            fCost = gCost + hCost;
+            F = G + H;
         }
 
     }
