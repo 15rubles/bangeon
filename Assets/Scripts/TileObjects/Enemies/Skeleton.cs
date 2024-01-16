@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Component;
+using System.Collections.Generic;
 using System.Linq;
 using Tiles;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace Assets.Scripts.Enemies
 {
     public class Skeleton : Enemy
     {
-        //[SerializeField] private PathFinder pathFinder;
+        [SerializeField] private List<WeightedTile> _pathTiles;
 
         private const double TOLERANCE = 0.1f;
 
@@ -21,39 +22,41 @@ namespace Assets.Scripts.Enemies
 
         public override TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            //List<Tile> path = pathFinder.FindPath(currentTile, currentPlayerTile);
+            _pathTiles = PathFinder.FindShortestPath(currentTile, currentPlayerTile);
 
-            //Debug.Log(path.Count);
+            List<Tile> neighbours = currentTile.GetTileNeighbors();
 
-            if (true)
+            if (neighbours.Exists(x => x == currentPlayerTile))//TODO проверка на атаку
             {
-                return TileObjectAction.MoveFront;
+                _nextAction = TileObjectAction.Attack;
             }
-
+            else
+            {
+                switch (_pathTiles[0].Tile.TileNeighborDirection(_pathTiles[1].Tile))
+                {
+                    case Direction.Front:
+                        _nextAction = TileObjectAction.MoveFront;
+                        break;
+                    case Direction.Back:
+                        _nextAction = TileObjectAction.MoveBack;
+                        break;
+                    case Direction.Left:
+                        _nextAction = TileObjectAction.MoveLeft;
+                        break;
+                    case Direction.Right:
+                        _nextAction = TileObjectAction.MoveRight;
+                        break;
+                    default:
+                        _nextAction = TileObjectAction.Stand;
+                        break;
+                }
+            }
+            return _nextAction;
         }
 
         public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            // if (CalculateNextAction() == EnemyAction.MoveFront)
-            // {
-            //     transform.position += new Vector3(0, 0, 2);
-            // }
-            // if (CalculateNextAction() == EnemyAction.MoveBack)
-            // {
-            //     transform.position += new Vector3(0, 0, -2);
-            // }
-            // if (CalculateNextAction() == EnemyAction.MoveLeft)
-            // {
-            //     transform.position += new Vector3(-2, 0, 0);
-            // }
-            // if (CalculateNextAction() == EnemyAction.MoveRight)
-            // {
-            //     transform.position += new Vector3(2, 0, 0);
-            // }
-            // if (CalculateNextAction() == EnemyAction.Stand)
-            // {
-            //     transform.position += Vector3.zero;
-            // }
+            base.DoNextAction(tiles, currentPlayerTile);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using Tiles;
 using UnityEngine;
 using System;
+using Component;
 
 namespace Assets.Scripts.Enemies
 {
@@ -21,99 +22,94 @@ namespace Assets.Scripts.Enemies
 
         public override TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            _pathTiles = PathFinder.FindPath(currentTile, currentPlayerTile);
-            
+            _pathTiles = PathFinder.FindLongestPath(currentTile, currentPlayerTile);
+
             List<Tile> neighborTiles = currentTile.GetTileNeighbors();
 
-            if (neighborTiles.Count == 0)
-            {
-                _nextAction = TileObjectAction.Stand;
-            }
-            else
-            {
-                if(neighborTiles.Count < 4)
-                {
-                    if(currentTile.right == null || currentTile.left == null)
-                    {
-                        switch (UnityEngine.Random.Range(0, 2))
-                        {
-                            case 0: _nextAction = TileObjectAction.MoveFront; break;
-                            case 1: _nextAction = TileObjectAction.MoveBack; break;
-                        }
-                    }
-                    if(currentTile.back == null || currentTile.front == null)
-                    {
-                        switch (UnityEngine.Random.Range(0, 2))
-                        {
-                            case 0: _nextAction = TileObjectAction.MoveLeft; break;
-                            case 1: _nextAction = TileObjectAction.MoveRight; break;
-                        }
-                    }
-                }
-                else
-                {
-                    if (currentPlayerTile == currentTile.left)
-                    {
-                        _nextAction = TileObjectAction.MoveRight;
-                        Debug.Log(currentPlayerTile == currentTile.left);
-                    }
-                    if (currentPlayerTile == currentTile.right)
-                    {
-                        _nextAction = TileObjectAction.MoveLeft;
-                    }
-                    if (currentPlayerTile == currentTile.back)
-                    {
-                        _nextAction = TileObjectAction.MoveFront;
-                    }
-                    if (currentPlayerTile == currentTile.front)
-                    {
-                        _nextAction = TileObjectAction.MoveBack;
-                    }
-                }
-            }
+            _pathTiles[0].Tile.TileNeighborDirection(_pathTiles[1].Tile);
 
+
+
+            //if(_pathTiles[0].Tile.TileNeighborDirection(_pathTiles[1].Tile) == Direction.Back)
+            //{
+            //    if(neighborTiles.Exists(x => x.isPassable == true))
+            //    {
+            //        if (currentTile.left.isPassable && currentTile.left != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveLeft;
+            //        }
+            //        if (currentTile.right.isPassable && currentTile.right != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveRight;
+            //        }
+            //        if (currentTile.front.isPassable && currentTile.front != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveFront;
+            //        }
+            //    }
+            //}
+            //if (_pathTiles[0].Tile.TileNeighborDirection(_pathTiles[1].Tile) == Direction.Front)
+            //{
+            //    if (neighborTiles.Exists(x => x.isPassable == true))
+            //    {
+            //        if (currentTile.left.isPassable && currentTile.left != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveLeft;
+            //        }
+            //        if (currentTile.right.isPassable && currentTile.right != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveRight;
+            //        }
+            //        if (currentTile.back.isPassable && currentTile.back != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveBack;
+            //        }
+            //    }
+            //}
+            //if (_pathTiles[0].Tile.TileNeighborDirection(_pathTiles[1].Tile) == Direction.Right)
+            //{
+            //    if (neighborTiles.Exists(x => x.isPassable == true))
+            //    {
+            //        if (currentTile.left.isPassable && currentTile.left != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveLeft;
+            //        }
+            //        if (currentTile.back.isPassable && currentTile.back != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveBack;
+            //        }
+            //        if (currentTile.front.isPassable && currentTile.front != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveFront;
+            //        }
+            //    }
+            //}
+            //if (_pathTiles[0].Tile.TileNeighborDirection(_pathTiles[1].Tile) == Direction.Left)
+            //{
+            //    if (neighborTiles.Exists(x => x.isPassable == true))
+            //    {
+            //        if (currentTile.back.isPassable && currentTile.back != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveBack;
+            //        }
+            //        if (currentTile.right.isPassable && currentTile.right != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveRight;
+            //        }
+            //        if (currentTile.front.isPassable && currentTile.front != null)
+            //        {
+            //            _nextAction = TileObjectAction.MoveFront;
+            //        }
+            //    }
+            //}
+            //TODO подумать как можно уменьшить
             return _nextAction;
-
-            //TODO адекватное поведение прикола на границе карты
         }
 
 
         public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            if (_nextAction == TileObjectAction.Undefined)
-            {
-                _nextAction = CalculateNextAction(tiles, currentPlayerTile);
-            }
-
-            Vector3 move = Vector3.zero;
-            switch (_nextAction)
-            {
-                case TileObjectAction.Stand:
-                    break;
-                case TileObjectAction.MoveFront:
-                    currentTile = currentTile.front;
-                    move += new Vector3(0, 0, 2);
-                    _nextAction = TileObjectAction.Stand;
-                    break;
-                case TileObjectAction.MoveBack:
-                    currentTile = currentTile.back;
-                    move += new Vector3(0, 0, -2);
-                    _nextAction = TileObjectAction.Stand;
-                    break;
-                case TileObjectAction.MoveLeft:
-                    currentTile = currentTile.left;
-                    move += new Vector3(-2, 0, 0);
-                    _nextAction = TileObjectAction.Stand;
-                    break;
-                case TileObjectAction.MoveRight:
-                    currentTile = currentTile.right;
-                    move += new Vector3(2, 0, 0);
-                    _nextAction = TileObjectAction.Stand;
-                    //TODO нормально придумать проверку
-                    break;
-            }
-
-            transform.position += move;
+            base.DoNextAction(tiles, currentPlayerTile);
         }
     }
 }

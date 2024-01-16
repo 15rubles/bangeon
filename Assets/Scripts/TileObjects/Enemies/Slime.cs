@@ -40,23 +40,30 @@ namespace Enemies
                 {
                     Tile nextTile = neighborsTiles[Random.Range(0, neighborsTiles.Count)];
                     Direction nextTileDirection = currentTile.TileNeighborDirection(nextTile);
-                    switch (nextTileDirection)
+                    if (nextTile.isPassable)
                     {
-                        case Direction.Front:
-                            _nextAction = TileObjectAction.MoveFront;
-                            break;
-                        case Direction.Back:
-                            _nextAction = TileObjectAction.MoveBack;
-                            break;
-                        case Direction.Left:
-                            _nextAction = TileObjectAction.MoveLeft;
-                            break;
-                        case Direction.Right:
-                            _nextAction = TileObjectAction.MoveRight;
-                            break;
-                        default:
-                            _nextAction = TileObjectAction.Stand;
-                            break;
+                        switch (nextTileDirection)
+                        {
+                            case Direction.Front:
+                                _nextAction = TileObjectAction.MoveFront;
+                                break;
+                            case Direction.Back:
+                                _nextAction = TileObjectAction.MoveBack;
+                                break;
+                            case Direction.Left:
+                                _nextAction = TileObjectAction.MoveLeft;
+                                break;
+                            case Direction.Right:
+                                _nextAction = TileObjectAction.MoveRight;
+                                break;
+                            default:
+                                _nextAction = TileObjectAction.Stand;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        _nextAction = TileObjectAction.Stand;
                     }
                 }
             }
@@ -66,38 +73,7 @@ namespace Enemies
 
         public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            if (_nextAction == TileObjectAction.Undefined)
-            {
-                _nextAction = CalculateNextAction(tiles, currentPlayerTile);
-            }
-
-            Vector3 move = Vector3.zero;
-            switch (_nextAction)
-            {
-                case TileObjectAction.Stand:
-                    break;
-                case TileObjectAction.MoveFront:
-                    currentTile = currentTile.front;
-                    move += new Vector3(0, 0, 2);
-                    break;
-                case TileObjectAction.MoveBack:
-                    currentTile = currentTile.back;
-                    move += new Vector3(0, 0, -2);
-                    break;
-                case TileObjectAction.MoveLeft:
-                    currentTile = currentTile.left;
-                    move += new Vector3(-2, 0, 0);
-                    break;
-                case TileObjectAction.MoveRight:
-                    currentTile = currentTile.right;
-                    move += new Vector3(2, 0, 0);
-                    break;
-                case TileObjectAction.Attack:
-                    Debug.Log("Slime Attacked");
-                    break;
-            }
-
-            transform.position += move; //TODO добавить анимации + и т д 
+            base.DoNextAction(tiles, currentPlayerTile);
         }
     }
 }

@@ -29,7 +29,7 @@ public class GameController : MonoBehaviour
     
     private void Awake()
     {
-        Tile firstTile = new Tile(0, 0);
+        Tile firstTile = new Tile(0, 0, true);
         tiles.Add(firstTile);
         AddParrentTile(firstTile);
         //_tileObjects.Union(_enemies).Union(_traps);
@@ -66,7 +66,7 @@ public class GameController : MonoBehaviour
                .FirstOrDefault(lTile => Math.Abs(lTile.x - tile.x) < TOLERANCE && Math.Abs(lTile.z - tile.z - 2) < TOLERANCE);
            if (newTile == null)
            {
-               newTile = new Tile(tile.x, tile.z + 2, null, null, tile, null);
+               newTile = new Tile(tile.x, tile.z + 2, null, null, tile, null, true);
                tiles.Add(newTile);
            } 
            tile.front = newTile;
@@ -78,7 +78,7 @@ public class GameController : MonoBehaviour
                 .FirstOrDefault(lTile => Math.Abs(lTile.x - tile.x) < TOLERANCE && Math.Abs(lTile.z - tile.z + 2) < TOLERANCE);
             if (newTile == null)
             {
-                newTile = new Tile(tile.x, tile.z - 2, null, null, null, tile );
+                newTile = new Tile(tile.x, tile.z - 2, null, null, null, tile, true);
                 tiles.Add(newTile);
             } 
             tile.back = newTile;
@@ -90,7 +90,7 @@ public class GameController : MonoBehaviour
                 .FirstOrDefault(lTile => Math.Abs(lTile.x - tile.x + 2) < TOLERANCE && Math.Abs(lTile.z - tile.z) < TOLERANCE);
             if (newTile == null)
             {
-                newTile = new Tile(tile.x - 2, tile.z, null, tile, null, null);
+                newTile = new Tile(tile.x - 2, tile.z, null, tile, null, null, true);
                 tiles.Add(newTile);
             } 
             tile.left = newTile;
@@ -102,7 +102,7 @@ public class GameController : MonoBehaviour
                 .FirstOrDefault(lTile => Math.Abs(lTile.x - tile.x - 2) < TOLERANCE && Math.Abs(lTile.z - tile.z) < TOLERANCE);
             if (newTile == null)
             {
-                newTile = new Tile(tile.x + 2, tile.z, tile, null, null, null );
+                newTile = new Tile(tile.x + 2, tile.z, tile, null, null, null, true);
                 tiles.Add(newTile);
             } 
             tile.right = newTile;

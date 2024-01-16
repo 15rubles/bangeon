@@ -26,18 +26,19 @@ namespace TileObjects.Traps
 
         public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
-            if (_nextAction == TileObjectAction.Undefined)
-            {
-                _nextAction = CalculateNextAction(tiles, currentPlayerTile);
-            }
-            else
-            {
-                switch(_nextAction)
-                {
-                    case TileObjectAction.Attack: Debug.Log("SpikesStatic Attacked"); break; //TODO добавить нанесение урона
-                    case TileObjectAction.Stand: break;
-                }
-            }
+            //if (_nextAction == TileObjectAction.Undefined)
+            //{
+            //    _nextAction = CalculateNextAction(tiles, currentPlayerTile);
+            //}
+            //else
+            //{
+            //    switch(_nextAction)
+            //    {
+            //        case TileObjectAction.Attack: Debug.Log("SpikesStatic Attacked"); break; //TODO добавить нанесение урона
+            //        case TileObjectAction.Stand: break;
+            //    }
+            //}
+            base.DoNextAction(tiles, currentPlayerTile);
         }
     }
 }

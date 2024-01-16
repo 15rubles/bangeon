@@ -11,10 +11,6 @@ namespace Assets.Scripts.TileObjects.Traps
     {
         [SerializeField] private List<PathTile> _pathTiles; 
         [SerializeField] private PathTile currentTile2;
-        
-        [SerializeField] private Tile startTile;
-        [SerializeField] private Tile endTile;
-        [SerializeField] private int deltaX, deltaZ;
 
         private const double TOLERANCE = 0.1f;
 
@@ -26,76 +22,78 @@ namespace Assets.Scripts.TileObjects.Traps
                                          && Math.Abs(lTile.z - gameObject.transform.position.z) < TOLERANCE);
 
             currentTile2 = _pathTiles[0];
+
             for (int i = 0; i < _pathTiles.Count - 1; i++)
             {
                 _pathTiles[i].next = _pathTiles[i + 1];
             }
             _pathTiles[^1].next = _pathTiles[0];
-            
-            startTile = tiles.Find(lTile => lTile.x == startTile.x && startTile.z == lTile.z);
-            endTile = tiles.Find(lTile => lTile.x == endTile.x && endTile.z == lTile.z);
         }
 
-        public override TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
-        {
-            deltaX = startTile.x - endTile.x;
-            deltaZ = startTile.z - endTile.z;
+        //public override TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
+        //{
+        //    deltaX = startTile.x - endTile.x;
+        //    deltaZ = startTile.z - endTile.z;
 
-            if (currentTile == endTile)
-            {
-                (startTile, endTile) = (endTile, startTile);
-            }
-            else
-            {
-                if (deltaX == 0 || deltaZ == 0)
-                {
-                    if (deltaX < 0)
-                    {
-                        _nextAction = TileObjectAction.MoveRight;
-                    }
-                    else if (deltaX > 0)
-                    {
-                        _nextAction = TileObjectAction.MoveLeft;
-                    }
+        //    if (currentTile == endTile)
+        //    {
+        //        (startTile, endTile) = (endTile, startTile);
+        //    }
+        //    else
+        //    {
+        //        if (deltaX == 0 || deltaZ == 0)
+        //        {
+        //            if (deltaX < 0)
+        //            {
+        //                _nextAction = TileObjectAction.MoveRight;
+        //            }
+        //            else if (deltaX > 0)
+        //            {
+        //                _nextAction = TileObjectAction.MoveLeft;
+        //            }
 
-                    if (deltaZ < 0)
-                    {
-                        _nextAction = TileObjectAction.MoveFront;
-                    }
-                    else if (deltaZ > 0)
-                    {
-                        _nextAction = TileObjectAction.MoveBack;
-                    }
-                }
-                else
-                {
-                    _nextAction = TileObjectAction.Stand;
-                }
-            }
+        //            if (deltaZ < 0)
+        //            {
+        //                _nextAction = TileObjectAction.MoveFront;
+        //            }
+        //            else if (deltaZ > 0)
+        //            {
+        //                _nextAction = TileObjectAction.MoveBack;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            _nextAction = TileObjectAction.Stand;
+        //        }
+        //    }
 
-            if (currentTile == currentPlayerTile)
-            {
-                _nextAction = TileObjectAction.Attack;
-            }
+        //    if (currentTile == currentPlayerTile)
+        //    {
+        //        _nextAction = TileObjectAction.Attack;
+        //    }
 
-            return _nextAction;
-        }
+        //    return _nextAction;
+        //}
         
-        public TileObjectAction CalculateNextAction2(List<Tile> tiles, Tile currentPlayerTile)
+        public override TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
             switch (currentTile2.tile.TileNeighborDirection(currentTile2.next.tile))
             {
                 case Direction.Front:
                     _nextAction = TileObjectAction.MoveFront;
+                    gameObject.transform.Rotate(0, 0, 0);
                     break;
                 case Direction.Back:
                     _nextAction = TileObjectAction.MoveBack;
+                    gameObject.transform.Rotate(0, 0, 0);
                     break;
                 case Direction.Left:
                     _nextAction = TileObjectAction.MoveLeft;
+                    gameObject.transform.Rotate(0, 90, 0);
                     break;
                 case Direction.Right:
                     _nextAction = TileObjectAction.MoveRight;
+                    gameObject.transform.Rotate(0, 90, 0);
                     break;
                 default:
                     _nextAction = TileObjectAction.Stand;
@@ -104,7 +102,7 @@ namespace Assets.Scripts.TileObjects.Traps
             return _nextAction;
         }
         
-        public void DoNextAction2(List<Tile> tiles, Tile currentPlayerTile)
+        public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
         {
             if (_nextAction == TileObjectAction.Undefined)
             {
@@ -142,42 +140,40 @@ namespace Assets.Scripts.TileObjects.Traps
             currentTile2 = currentTile2.next;
         }
 
-        public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
-        {
-            if (_nextAction == TileObjectAction.Undefined)
-            {
-                _nextAction = CalculateNextAction(tiles, currentPlayerTile);
-            }
+        //public override void DoNextAction(List<Tile> tiles, Tile currentPlayerTile)
+        //{
+        //    if (_nextAction == TileObjectAction.Undefined)
+        //    {
+        //        _nextAction = CalculateNextAction(tiles, currentPlayerTile);
+        //    }
 
-            Vector3 move = Vector3.zero;
-            switch (_nextAction)
-            {
-                case TileObjectAction.Stand:
-                    break;
-                case TileObjectAction.MoveFront:
-                    currentTile = currentTile.front;
-                    move += new Vector3(0, 0, 2);
-                    break;
-                case TileObjectAction.MoveBack:
-                    currentTile = currentTile.back;
-                    move += new Vector3(0, 0, -2);
-                    break;
-                case TileObjectAction.MoveLeft:
-                    currentTile = currentTile.left;
-                    move += new Vector3(-2, 0, 0);
-                    break;
-                case TileObjectAction.MoveRight:
-                    currentTile = currentTile.right;
-                    move += new Vector3(2, 0, 0);
-                    break;
-                case TileObjectAction.Attack:
-                    Debug.Log("Saw Attacked");
-                    break;
-            }
+        //    Vector3 move = Vector3.zero;
+        //    switch (_nextAction)
+        //    {
+        //        case TileObjectAction.Stand:
+        //            break;
+        //        case TileObjectAction.MoveFront:
+        //            currentTile = currentTile.front;
+        //            move += new Vector3(0, 0, 2);
+        //            break;
+        //        case TileObjectAction.MoveBack:
+        //            currentTile = currentTile.back;
+        //            move += new Vector3(0, 0, -2);
+        //            break;
+        //        case TileObjectAction.MoveLeft:
+        //            currentTile = currentTile.left;
+        //            move += new Vector3(-2, 0, 0);
+        //            break;
+        //        case TileObjectAction.MoveRight:
+        //            currentTile = currentTile.right;
+        //            move += new Vector3(2, 0, 0);
+        //            break;
+        //        case TileObjectAction.Attack:
+        //            Debug.Log("Saw Attacked");
+        //            break;
+        //    }
 
-            transform.position += move;
-        }
-        
-      
+        //    transform.position += move;
+        //}      
     }
 }

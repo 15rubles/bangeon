@@ -85,7 +85,7 @@ namespace Component
                 return false;
             }
 
-            if (tile.IsPassable())
+            if (tile.isPassable)
             {
                 currentTile = tile;
                 return true;

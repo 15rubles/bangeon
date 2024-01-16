@@ -15,7 +15,9 @@ namespace Tiles
         public Tile back;
         public Tile front;
 
-        public Tile(int x, int z, Tile left, Tile right, Tile back, Tile front)
+        public bool isPassable;
+
+        public Tile(int x, int z, Tile left, Tile right, Tile back, Tile front, bool isPassable)
         {
             this.x = x;
             this.z = z;
@@ -23,23 +25,26 @@ namespace Tiles
             this.right = right;
             this.back = back;
             this.front = front;
+            this.isPassable = true;
         }
 
-        public Tile(int x, int z)
+        public Tile(int x, int z, bool isPassable)
         {
             this.x = x;
             this.z = z;
+            this.isPassable = isPassable;
         }
 
         public Tile()
         { 
             x = 0;
             z = 0;
+            isPassable = true;
         }
 
         public bool IsPassable()
         {
-            return true;
+            return isPassable;
         }
         
         public List<Tile> GetTileNeighbors()

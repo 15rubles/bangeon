@@ -18,7 +18,7 @@ namespace Assets.Scripts
 
     public abstract class TileObject : MonoBehaviour
     {
-        protected string objectName;
+        [SerializeField] protected string objectName;
         protected TileObjectAction _nextAction;
         [SerializeField] protected Tile currentTile;
         public abstract TileObjectAction CalculateNextAction(List<Tile> tiles, Tile currentPlayerTile);
@@ -52,7 +52,7 @@ namespace Assets.Scripts
                     move += new Vector3(2, 0, 0);
                     break;
                 case TileObjectAction.Attack:
-                    Debug.Log("Saw Attacked");
+                    Debug.Log(objectName + " Attacked");
                     break;
             }
 
