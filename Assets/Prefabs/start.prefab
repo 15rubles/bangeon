@@ -83,7 +83,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileData:
     coordinates: {x: 0, y: 0}
-    isPassable: 0
+    isPassable: 1
     neighbors:
       Left: {fileID: 0}
       Right: {fileID: 0}

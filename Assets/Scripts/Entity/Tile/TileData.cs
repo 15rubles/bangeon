@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Common;
 using Entity.TileObject;
 using Tool;
@@ -9,17 +10,10 @@ namespace Entity.Tile
     [Serializable]
     public class TileNeighbors
     {
-        public TileImpl Left;
-        public TileImpl Right;
-        public TileImpl Back;
-        public TileImpl Front;
-
-        public TileNeighbors(TileImpl left, TileImpl right, TileImpl back, TileImpl front)
+        public Dictionary<Direction, TileImpl> neighborsByDirection = new Dictionary<Direction, TileImpl>();
+        public TileNeighbors(Dictionary<Direction, TileImpl> neighborsByDirection)
         {
-            Left = left;
-            Right = right;
-            Back = back;
-            Front = front;
+            this.neighborsByDirection = neighborsByDirection;
         }
 
     }
@@ -27,10 +21,11 @@ namespace Entity.Tile
     [Serializable]
     public class TileData
     {
-        [ReadOnly] [SerializeField] private Vector2Int coordinates;
-        [ReadOnly] [SerializeField] private bool isPassable;
-        [ReadOnly] [SerializeField] private TileNeighbors neighbors;
-        [ReadOnly] [SerializeReference] private ITileObject tileObject;
+        [SerializeField] private Vector2Int coordinates;
+        [SerializeField] private bool isPassable;
+        [SerializeField] private TileNeighbors neighbors;
+        [SerializeField] private int fallingTurn;
+        private ITileObject tileObject;
         [SerializeField] private TileType type;
 
 
@@ -53,6 +48,12 @@ namespace Entity.Tile
         {
             get => type;
             set => type = value;
+        }
+
+        public int FallingTurn
+        {
+            get => fallingTurn;
+            set => fallingTurn = value;
         }
 
         public TileData(Vector2Int coordinates, bool isPassable, TileNeighbors neighbors, TileType type)

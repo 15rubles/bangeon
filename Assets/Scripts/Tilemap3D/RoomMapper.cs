@@ -6,6 +6,7 @@ using Entity.Tile;
 using Entity.TileObject;
 using Tool;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 namespace Tilemap3D
@@ -14,7 +15,7 @@ namespace Tilemap3D
     {
         [SerializeField] private Tilemap tilemapFloor;
         [SerializeField] private Tilemap tilemapTileObjects;
-        [SerializeField] private Tilemap fallingNumbers;
+        [SerializeField] private Tilemap tilemapFallingNumbers;
         [SerializeField] private int difficulty;
         [SerializeReference] private IRoom room;
 
@@ -54,6 +55,21 @@ namespace Tilemap3D
                 }
             }
 
+            tilemapObjects = TilemapTools.GetAllGameObjectsFromTiles(tilemapFallingNumbers);
+
+            foreach (TilemapGameObject tilemapObj in tilemapObjects)
+            {
+                FallingNumber number = tilemapObj.obj.GetComponent<FallingNumber>();
+                if (number != null)
+                {
+                    TileImpl tile = GetTileByCoordinates(new Vector2Int(tilemapObj.x, tilemapObj.y), tiles);
+                    if (tile != null)
+                    {
+                        tile.TileData.FallingTurn = number.fallingNumber;
+                    }
+                }
+            }
+
             return new FightRoom(new RoomData(tiles, tileObjects, FindFirstByTileType(TileType.Start, tiles),
                 FindFirstByTileType(TileType.End, tiles), difficulty));
         }
@@ -64,10 +80,12 @@ namespace Tilemap3D
             {
                 Vector2Int coordinates = tile.TileData.Coordinates;
                 TileNeighbors neighbors = tile.TileData.Neighbors;
-                neighbors.Front = GetTileByCoordinates(coordinates + Vector2Int.up, tiles);
-                neighbors.Back = GetTileByCoordinates(coordinates + Vector2Int.down, tiles);
-                neighbors.Left = GetTileByCoordinates(coordinates + Vector2Int.left, tiles);
-                neighbors.Right = GetTileByCoordinates(coordinates + Vector2Int.right, tiles);
+                neighbors.neighborsByDirection = new Dictionary<Direction, TileImpl>();
+                foreach (Direction direction in DirectionTolls.GetDirectionCircle())
+                {
+                    neighbors.neighborsByDirection[direction] =
+                        GetTileByCoordinates(coordinates + direction.ToVector2Int(), tiles);
+                }
             }
         }
 
