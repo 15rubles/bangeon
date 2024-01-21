@@ -21,6 +21,7 @@ namespace Tilemap3D
         private void Start()
         {
             room = GenerateRoom();
+
             Debug.Log("ert");
         }
 

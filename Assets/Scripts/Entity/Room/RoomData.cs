@@ -10,12 +10,13 @@ namespace Entity.Room
     [Serializable]
     public class RoomData
     {
-        [SerializeField] private List<TileImpl> tiles;
-        [SerializeReference] private List<ITileObject> tileObjects;
+        private List<TileImpl> tiles;
+
+        private List<ITileObject> tileObjects;
 
         // [InspectorReadOnly] private List<Character> charactersInRoom;
-        [SerializeField] private TileImpl startTileImpl;
-        [SerializeField] private TileImpl exitTileImpl;
+        private TileImpl startTileImpl;
+        private TileImpl exitTileImpl;
         [SerializeField] private int difficulty;
         [SerializeField] public bool isPassed = false;
 
